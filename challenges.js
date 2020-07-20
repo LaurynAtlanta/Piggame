@@ -13,28 +13,37 @@ var scores, roundScore, activePlayer, gamePlaying;
 
 init();
 
+var lastDice;
+
 document.querySelector('.btn-roll').addEventListener('click', function(){
 
-    if(gamePlaying){
-        // find a random number between 1 and 6
-        var dice = Math.floor(Math.random() * 6 + 1);
+        if(gamePlaying){
+            // find a random number between 1 and 6
+            var dice = Math.floor(Math.random() * 6 + 1);
 
-        //Display the result 
-        var diceDOM = document.querySelector('.dice');
-        diceDOM.style.display = 'block';
-        diceDOM.src = 'dice-' + dice + '.png';
+            //Display the result 
+            var diceDOM = document.querySelector('.dice');
+            diceDOM.style.display = 'block';
+            diceDOM.src = 'dice-' + dice + '.png';
 
 
-        //update the round score if the rolled number was not a 1
-        if(dice !== 1) {
-            //add the score
-            roundScore +=dice;
-            document.querySelector('#current-' + activePlayer).textContent = roundScore;
-        } else {
-            //next player
-            nextPlayer();
+
+            if (dice === 6 && lastDice === 6) {
+                //player looses global score
+                scores[activePlayer] = 0;
+                //update UI to show new global score
+                document.querySelector('#score-' + activePlayer).textContent = 0;
+            } else if(dice !== 1) {
+                //update the round score if the rolled number was not a 1
+                //add the score
+                roundScore +=dice;
+                document.querySelector('#current-' + activePlayer).textContent = roundScore;
+            } else {
+                //next player
+                nextPlayer();
+            }
+            lastDice = dice;
         }
-    }
 });
 
 document.querySelector('.btn-hold').addEventListener('click', function(){
@@ -103,10 +112,4 @@ function init(){
 }
 
 
-
-
- 
-
-
-
-
+//player looses entire score when rolls 2 6's in a row.
